@@ -214,10 +214,21 @@ import SpreadGrid1 from "./components/SpreadGrid";
 import MySpreadGrid from "./components/SpreadGrid";
 import EmployeeHome from "./components/Home Page/Employee";
 import HolidaysPage from "./components/Home Page/Holidays";
-import HolidayForm2 from "./components/Home Page/Holiday2";
-import EmployeeProfileForm from "./components/Home Page/EmployeeForm";
+import HolidayForm2 from "./components/Home Page/HolidayForm";
 import ShiftForm from "./components/Home Page/PaymShiftForm";
 import NewDailyTimeCard1 from "./components/Home Page/NewDailyTimeCard";
+import { Dashboard } from "@mui/icons-material";
+import GraphCheckBox1 from "./components/dashboredsss/GraphCheckBox";
+import DailyTimeCardTable from "./components/Home Page/NewDailyTimeCard";
+import HolidaysHrPage from "./components/Home Page/HolidayHRside";
+import LeaveBalances from "./components/Home Page/LeaveBalances";
+import EmployeeReimbursement from "./components/Home Page/Reimbursement";
+import ReimbursementForm from "./components/Home Page/ReimbursementForm";
+import LeaveBalanceForm from "./components/Home Page/LeaveBalanceForm";
+import LoanEntryForm from "./components/Home Page/LoanEntryForm";
+import ReimbursementApprovalForm from "./components/Home Page/ReimbursementApprovalForm";
+import Employeeprofile0909090 from "./components/Home Page/Employee";
+import EmployeeProfileForm from "./components/Home Page/EmployeeProfileForm";
 
 
 const store = createStore(entityReducer);
@@ -256,13 +267,23 @@ root.render(
           <Route path="/PaymBranchtable" element={<PaymBranchtable />}></Route>
           <Route path="/SpreadGrid" element={<MySpreadGrid/>}></Route>
 
-          <Route path="/Employee" element={<EmployeeHome/>}/>
+          <Route path="/Employee" element={<Employeeprofile0909090/>}/>
           <Route path="/Holidays" element={<HolidaysPage/>}/>
-          <Route path="/HolidayForm2" element={<HolidayForm2/>}></Route>
-          <Route path="/EmployeeForm" element={<EmployeeProfileForm/>}/>
-          <Route path="/PaymShiftForm" element={<ShiftForm/>}/>
-          <Route path="/NewDailyTimeCard" element={<NewDailyTimeCard1/>}/>
+          <Route path="/HolidayHRside" element={<HolidaysHrPage/>}/>
+          <Route path="/HolidayForm" element={<HolidayForm2/>}></Route>
           
+          <Route path="/PaymShiftForm" element={<ShiftForm/>}/>
+          <Route path="/NewDailyTimeCard" element={<DailyTimeCardTable/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/graphbox" element={<GraphCheckBox1/>}/>
+          <Route path="/LeaveBalance" element={<LeaveBalances/>}/>
+          <Route path="/Reimbursement" element={<EmployeeReimbursement/>}/>
+          <Route path="/ReimbursementForm" element={<ReimbursementForm/>}/>
+          <Route path="/LeaveBalanceForm" element={<LeaveBalanceForm/>}/>
+          <Route path="/LoanEntryForm" element={<LoanEntryForm/>}/>
+          <Route path="/ReimbursementApprovalForm" element={<ReimbursementApprovalForm/>}/>
+          <Route path="/EmployeeProfileForm" element={<EmployeeProfileForm/>}/>
+
           {/* <Route path="/layout" element={<Layoutcomp />} />
           <Route path="/att" element={<BasicDateCalendar />} />
           <Route path="/home" element={<ServiceCard />}></Route>

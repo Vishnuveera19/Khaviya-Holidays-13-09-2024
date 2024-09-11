@@ -1,345 +1,298 @@
-import React, { useState, useEffect } from "react";
-import { ServerConfig } from '../../serverconfiguration/serverconfig';
-import { REPORTS } from '../../serverconfiguration/controllers';
-import { postRequest } from '../../serverconfiguration/requestcomp';
 import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Drawer,
-  Button,
-  InputBase,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Avatar,
-  CssBaseline,
-  IconButton,
   Grid,
-  Box,
+  Card,
   TextField,
-  Select,
-  MenuItem,
-  InputLabel,
+  Button,
+  Typography,
+  Box,
+  CardContent,
   FormControl,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
-import Sidenav from "./Sidenav";
-import Navbar from "./Navbar";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+  InputLabel,
+  IconButton,
+  FormHelperText,
+} from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  PAYMBRANCHES,
+  PAYMCOMPANIES,
+  PAYMEMPLOYEE,
+  PAYMDIVISION,
+  PAYMDEPARTMENT,
+  PAYMDESIGNATION,
+  PAYMGRADE,
+  PAYMSHIFT,
+  PAYMCATEGORY,
+  JOBSTATUS,
+  PAYMLEVEL,
+  SAVE,
+} from "../../serverconfiguration/controllers";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { getRequest, postRequest } from "../../serverconfiguration/requestcomp";
+import { ServerConfig } from "../../serverconfiguration/serverconfig";
 import { useNavigate } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: "#ffffff",
-    color: "#000000",
-  },
-  drawer: {
-    width: 240,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: 240,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(2),
-    marginLeft: theme.spacing(-11),
-  },
-  toolbar: theme.mixins.toolbar,
-  searchContainer: {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "#f1f1f1",
-    padding: theme.spacing(1),
-    borderRadius: theme.shape.borderRadius,
-    marginBottom: theme.spacing(1),
-    maxWidth: 400,
-  },
-  inputBase: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  searchIcon: {
-    padding: theme.spacing(0.5),
-  },
-  table: {
-    minWidth: 1100,
-  },
-  profilePic: {
-    marginRight: theme.spacing(1),
-  },
-  tableCell: {
-    alignItems: "center",
-  },
-  saveButton: {
-    backgroundColor: "#4a47a3",
-    color: "white",
-    "&:hover": {
-      backgroundColor: "#3a3789",
-    },
-  },
-  importButton: {
-    marginRight: theme.spacing(3),
-  },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: theme.spacing(2),
-  },
-  headerTitle: {
-    flexGrow: 1,
-  },
-  buttonContainer: {
-    display: "flex",
-    alignItems: "center",
-  },
-  tableHeader: {
-    backgroundColor: "#f1f1f1",
-  },
-  searchBox: {
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  actionCell: {
-    display: "flex",
-    justifyContent: "space-around",
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-}));
-
-function EmployeeHome() {
-  const classes = useStyles();
-  const [employees, setEmployees] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+export default function Employeeprofile0909090() {
   const navigate = useNavigate();
+  const [company, setCompany] = useState([]);
+  const [branch, setBranch] = useState([]);
+  const [employee, setEmployee] = useState([]);
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [designation, setDesignation] = useState([]);
+  const [grade, setGrade] = useState([]);
+  const [shift, setShift] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [jobstatus, setJobStatus] = useState([]);
+  const [level, setLevel] = useState([]);
+  const [pnCompanyId, setPnCompanyId] = useState("");
+  const [pnBranchId, setPnBranchId] = useState("");
+  const [pnEmployeeId, setPnEmployeeId] = useState("");
+  const [pnDivisionId, setPnDivisionId] = useState("");
+  const [pnDepartmentId, setPnDepartmentId] = useState("");
+  const [pnDesignationId, setPnDesignationId] = useState("");
+  const [pnGradeId, setPnGradeId] = useState("");
+  const [pnShiftId, setPnShiftId] = useState("");
+  const [pnCategoryId, setPnCategoryId] = useState("");
+  const [pnJobStatusId, setPnJobStatusId] = useState("");
+  const [pnLevelId, setPnLevelId] = useState("");
+  const [pnProjectsiteId, setPnProjectsiteId] = useState("");
+  const [dDate, setDDate] = useState("");
+  const [vReason, setVReason] = useState("");
+  const [rDepartment, setRDepartment] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [empProfileImage, setEmpProfileImage] = useState("");
 
-  // Function to fetch employee data
-  const fetchEmployees = async () => {
+  useEffect(() => {
+    async function getData() {
+      try {
+        const [companies, branches, employees, divisions, departments, designations, grades, shifts, categories, jobStatuses, levels] = await Promise.all([
+          getRequest(ServerConfig.url, PAYMCOMPANIES),
+          getRequest(ServerConfig.url, PAYMBRANCHES),
+          getRequest(ServerConfig.url, PAYMEMPLOYEE),
+          getRequest(ServerConfig.url, PAYMDIVISION),
+          getRequest(ServerConfig.url, PAYMDEPARTMENT),
+          getRequest(ServerConfig.url, PAYMDESIGNATION),
+          getRequest(ServerConfig.url, PAYMGRADE),
+          getRequest(ServerConfig.url, PAYMSHIFT),
+          getRequest(ServerConfig.url, PAYMCATEGORY),
+          getRequest(ServerConfig.url, JOBSTATUS),
+          getRequest(ServerConfig.url, PAYMLEVEL),
+        ]);
+
+        setCompany(companies.data);
+        setBranch(branches.data);
+        setEmployee(employees.data);
+        setDivision(divisions.data);
+        setDepartment(departments.data);
+        setDesignation(designations.data);
+        setGrade(grades.data);
+        setShift(shifts.data);
+        setCategory(categories.data);
+        setJobStatus(jobStatuses.data);
+        setLevel(levels.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    }
+    getData();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Validate required fields
+    if (!pnCompanyId || !pnCategoryId || !vReason || !dDate || !rDepartment || !fatherName) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+  
+    // Prepare the form data
+    const formData = {
+      pnCompanyId,
+      pnBranchId,
+      pnEmployeeId,
+      pnDivisionId,
+      pnDepartmentId,
+      pnDesignationId,
+      pnGradeId,
+      pnShiftId,
+      pnCategoryId,
+      pnJobStatusId,
+      pnLevelId,
+      pnProjectsiteId,
+      dDate,
+      vReason,
+      rDepartment,
+      fatherName,
+      empProfileImage
+    };
+  
     try {
-      const query = `
-        SELECT paym_Employee.Employee_Full_Name AS [Employee Name],
-               paym_Employee.pn_EmployeeID AS [Employee ID],
-               paym_Branch.BranchName AS [Branch Name],
-               paym_Company.CompanyName AS [Company Name],
-               paym_Department.v_DepartmentName AS [Department],
-               paym_Designation.v_DesignationName AS [Designation]
-        FROM paym_employee_profile1
-        LEFT JOIN paym_Employee ON paym_employee_profile1.pn_EmployeeID = paym_Employee.pn_EmployeeID
-        LEFT JOIN paym_Branch ON paym_employee_profile1.pn_BranchID = paym_Branch.pn_BranchID
-        LEFT JOIN paym_Company ON paym_employee_profile1.pn_CompanyID = paym_Company.pn_CompanyID
-        LEFT JOIN paym_Department ON paym_employee_profile1.pn_DepartmentId = paym_Department.pn_DepartmentId
-        LEFT JOIN paym_Designation ON paym_employee_profile1.pn_DesingnationId = paym_Designation.pn_DesignationID;
-      `;
-
-      const response = await postRequest(ServerConfig.url, REPORTS, { query });
-
+      const response = await postRequest(ServerConfig.url, SAVE, {
+        query: `
+          INSERT INTO [dbo].[paym_employee_profile1]
+            ([pn_CompanyID], [pn_BranchID], [pn_EmployeeID], [pn_DivisionId], [pn_DepartmentId], [pn_DesingnationId], [pn_GradeId], [pn_ShiftId], [pn_CategoryId], [pn_JobStatusId], [pn_LevelID], [pn_projectsiteID], [d_Date], [v_Reason], [r_Department], [father_name], [Emp_Profile_Image])
+          VALUES
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        params: [
+          formData.pnCompanyId,
+          formData.pnBranchId,
+          formData.pnEmployeeId,
+          formData.pnDivisionId,
+          formData.pnDepartmentId,
+          formData.pnDesignationId,
+          formData.pnGradeId,
+          formData.pnShiftId,
+          formData.pnCategoryId,
+          formData.pnJobStatusId,
+          formData.pnLevelId,
+          formData.pnProjectsiteId,
+          formData.dDate,
+          formData.vReason,
+          formData.rDepartment,
+          formData.fatherName,
+          formData.empProfileImage
+        ]
+      });
+  
       if (response.status === 200) {
-        console.log('Fetched employees:', response.data);
-        setEmployees(response.data || []);
+        alert('Form submitted successfully!');
+        navigate('/success-page'); // Replace with the appropriate navigation
       } else {
-        console.error(`Unexpected response status: ${response.status}`);
+        alert('Submission failed. Please try again.');
       }
     } catch (error) {
-      console.error('Error fetching employees data:', error);
+      console.error("Error submitting form", error.response?.data || error.message);
+      alert("Submission failed. Check console for details.");
     }
   };
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
-
-  // Function to handle search input change
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEmpProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file); // Converts to Base64
+    }
   };
 
-  // Filtered employees based on search query
-  const filteredEmployees = employees.filter((employee) => {
-    const searchValue = searchQuery.toLowerCase();
-    return (
-      String(employee["Employee Name"]).toLowerCase().includes(searchValue) ||
-      String(employee["Employee ID"]).toLowerCase().includes(searchValue) ||
-      String(employee["Branch Name"]).toLowerCase().includes(searchValue) ||
-      String(employee["Company Name"]).toLowerCase().includes(searchValue) ||
-      String(employee["Department"]).toLowerCase().includes(searchValue) ||
-      String(employee["Designation"]).toLowerCase().includes(searchValue)
-    );
-  });
-
-  // Handler functions for View, Edit, and Delete actions
-  const handleViewClick = (employeeId) => {
-    console.log("View clicked for employee ID:", employeeId);
-  };
-
-  const handleEditClick = (employeeId) => {
-    console.log("Edit clicked for employee ID:", employeeId);
-  };
-
-  const handleDeleteClick = (employeeId) => {
-    setEmployees(employees.filter((employee) => employee["Employee ID"] !== employeeId));
-  };
-function handleclick0009(){
-  navigate("/EmployeeForm")
-}
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <div style={{ backgroundColor: "#fff" }}>
-          <Navbar />
-          <Box height={30} />
-          <Box sx={{ display: "flex" }}>
-            <Sidenav />
-            <Grid
-              item
-              xs={12}
-              sm={10}
-              md={9}
-              lg={8}
-              xl={7}
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                margin: "5px 50px 50px 50px",
-              }}
-            >
-              <div className={classes.root}>
-                <CssBaseline />
+    <div>
+      <Grid style={{ padding: "80px 5px 0 5px" }}>
+        <Card style={{ maxWidth: 600, margin: "0 auto" }}>
+          <CardContent>
+            <Typography variant="h5" color="textSecondary" align="center">
+              Paym Employee Profile
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2} inputlabelprops={{ shrink: true }}>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel shrink>Company</InputLabel>
+                    <select
+                      name="pnCompanyId"
+                      value={pnCompanyId}
+                      onChange={(e) => setPnCompanyId(e.target.value)}
+                      style={{ height: "50px" }}
+                    >
+                      <option value="">Select</option>
+                      {company.map((e) => (
+                        <option key={e.pnCompanyId} value={e.pnCompanyId}>
+                          {e.companyName}
+                        </option>
+                      ))}
+                    </select>
+                  </FormControl>
+                </Grid>
 
-                <main className={classes.content}>
-                  <div className={classes.toolbar} />
-                  <div className={classes.header}>
-                    <Typography variant="h4" className={classes.headerTitle}>
-                      Employee
-                    </Typography>
-                    <div className={classes.buttonContainer}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.importButton}
-                        onClick={handleclick0009}
-                      >
-                        Add New Employee
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.saveButton}
-                      
-                      >
-                        Filter
-                      </Button>
-                    </div>
-                  </div>
-                  <Paper className={classes.searchBox}>
-                    <div className={classes.searchContainer}>
-                      <InputBase
-                        placeholder="Search..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        classes={{
-                          root: classes.inputBase,
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel shrink>Branch</InputLabel>
+                    <select
+                      name="pnBranchId"
+                      value={pnBranchId}
+                      onChange={(e) => setPnBranchId(e.target.value)}
+                      style={{ height: "50px" }}
+                    >
+                      <option value="">Select</option>
+                      {branch
+                        .filter((e) => e.pnCompanyId == pnCompanyId)
+                        .map((e) => (
+                          <option key={e.pnBranchId} value={e.pnBranchId}>
+                            {e.branchName}
+                          </option>
+                        ))}
+                    </select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        display: 'inline-block',
+                        width: '200px',
+                        height: '200px',
+                        borderRadius: '50%',
+                        overflow: 'hidden',
+                        backgroundColor: '#f0f0f0',
+                        border: '1px solid #ccc',
+                      }}
+                    >
+                      <img
+                        src={empProfileImage || 'default-avatar.png'}
+                        alt="Profile"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
                         }}
                       />
-                      <IconButton className={classes.searchIcon}>
-                        <SearchIcon />
-                      </IconButton>
-                    </div>
-                  </Paper>
+                      <label htmlFor="upload-image">
+                        <IconButton
+                          component="span"
+                          style={{
+                            position: 'absolute',
+                            bottom: '5px',
+                            right: '5px',
+                            backgroundColor: '#fff',
+                          }}
+                        >
+                          <AddAPhotoIcon />
+                        </IconButton>
+                      </label>
+                      <input
+                        type="file"
+                        id="upload-image"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                      />
+                    </Box>
+                  </FormControl>
+                </Grid>
 
-                  <TableContainer component={Paper}>
-                    <Table className={classes.table}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell className={classes.tableHeader}>
-                            Employee Name
-                          </TableCell>
-                          <TableCell className={classes.tableHeader}>
-                            Employee ID
-                          </TableCell>
-                          <TableCell className={classes.tableHeader}>
-                            Branch Name
-                          </TableCell>
-                          <TableCell className={classes.tableHeader}>
-                            Company Name
-                          </TableCell>
-                          <TableCell className={classes.tableHeader}>
-                            Department
-                          </TableCell>
-                          <TableCell className={classes.tableHeader}>
-                            Designation
-                          </TableCell>
-                          <TableCell className={classes.tableHeader}>
-                            Action
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {filteredEmployees.map((employee, index) => (
-                          <TableRow key={index}>
-                            <TableCell>
-                              <div style={{ display: "flex", alignItems: "center" }}>
-                                <Avatar
-                                  src={employee.avatar}
-                                  alt=""
-                                  className={classes.profilePic}
-                                />
-                                {employee["Employee Name"]}
-                              </div>
-                            </TableCell>
-                            <TableCell>{employee["Employee ID"]}</TableCell>
-                            <TableCell>{employee["Branch Name"]}</TableCell>
-                            <TableCell>{employee["Company Name"]}</TableCell>
-                            <TableCell>{employee["Department"]}</TableCell>
-                            <TableCell>{employee["Designation"]}</TableCell>
-                            <TableCell className={classes.actionCell}>
-                              <IconButton
-                                aria-label="view"
-                                onClick={() => handleViewClick(employee["Employee ID"])}
-                              >
-                                <VisibilityIcon />
-                              </IconButton>
-                              <IconButton
-                                aria-label="edit"
-                                onClick={() => handleEditClick(employee["Employee ID"])}
-                              >
-                                <EditIcon />
-                              </IconButton>
-                              <IconButton
-                                aria-label="delete"
-                                onClick={() => handleDeleteClick(employee["Employee ID"])}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </main>
-              </div>
-            </Grid>
-          </Box>
-        </div>
+                {/* Add other form fields similarly */}
+
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    fullWidth
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </CardContent>
+        </Card>
       </Grid>
-    </Grid>
+    </div>
   );
 }
-
-export default EmployeeHome;

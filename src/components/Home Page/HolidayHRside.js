@@ -20,13 +20,12 @@ import {
   FormControlLabel,
   FormControl
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
-const HolidaysPage = () => {
+
+const HolidaysHrPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [holidayType, setHolidayType] = useState('all');
   const [holidays, setHolidays] = useState([]);
-  const navigate = useNavigate();
 
   // Function to fetch holidays data
   const fetchHolidays = async () => {
@@ -64,9 +63,7 @@ const HolidaysPage = () => {
            holiday.holidayName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const handleAddNewHolidayClick = () => {
-    navigate('/HolidayForm');
-  };
+  
 
   return (
     <Box sx={{ p: 2 }}>
@@ -96,9 +93,7 @@ const HolidaysPage = () => {
           </RadioGroup>
         </FormControl>
 
-        <Button variant="contained" color="primary" onClick={handleAddNewHolidayClick}>
-          Add New Holiday
-        </Button>
+        
       </Stack>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }}>
@@ -124,4 +119,4 @@ const HolidaysPage = () => {
   );
 };
 
-export default HolidaysPage;
+export default HolidaysHrPage;

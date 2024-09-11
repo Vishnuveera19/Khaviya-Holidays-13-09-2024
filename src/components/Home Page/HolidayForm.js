@@ -79,6 +79,20 @@ const HolidayForm2 = () => {
     }
   };
 
+
+  const handleReset = () => {
+    setFormData({
+      pn_CompanyID: '',
+    pn_BranchID: '',
+    pn_Holidaycode: '',
+    pn_Holidayname: '',
+    Fyear: '',
+    From_date: '',
+    To_date: '',
+    days: '',
+  });
+  };
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
@@ -203,9 +217,19 @@ const HolidayForm2 = () => {
             />
           </Grid>
         </Grid>
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '20px' }}>
+
+        <Grid item xs={12} mt={3}>
+
+        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '20px'}}>
           Submit
         </Button>
+
+        <Button onClick={handleReset} variant="contained" color="secondary" style={{ marginTop: '20px', marginLeft: '50px' }}>
+              Reset
+            </Button>
+
+            </Grid>
+
       </form>
     </Container>
   );

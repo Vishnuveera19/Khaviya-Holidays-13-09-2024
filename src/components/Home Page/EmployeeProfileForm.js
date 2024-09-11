@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Grid, Container, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { TextField, Button, Grid, Container, Typography, Select, MenuItem, FormControl, InputLabel, IconButton, Paper } from '@mui/material';
+import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import { getRequest, postRequest } from '../../serverconfiguration/requestcomp';
 import { ServerConfig } from '../../serverconfiguration/serverconfig';
-import { PAYMCOMPANIES, PAYMBRANCHES, PAYMEMPLOYEE, PAYMDIVISION, PAYMDEPARTMENT, PAYMDESIGNATION, PAYMGRADE, PAYMSHIFT, PAYMCATEGORY, PAYMJOBSTATUS, PAYMLEVEL, SAVE } from '../../serverconfiguration/controllers';
+import { PAYMBRANCHES, PAYMCOMPANIES, PAYMEMPLOYEE, PAYMDIVISION, PAYMDEPARTMENT, PAYMDESIGNATION, PAYMGRADE, PAYMSHIFT, PAYMCATEGORY, PAYMJOBSTATUS, PAYMLEVEL, SAVE } from '../../serverconfiguration/controllers';
 
 const EmployeeProfileForm = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +22,8 @@ const EmployeeProfileForm = () => {
     d_Date: '',
     v_Reason: '',
     r_Department: '',
-    father_name: ''
+    father_name: '',
+    Emp_Profile_Image: ''
   });
 
   const [companies, setCompanies] = useState([]);
@@ -36,14 +38,16 @@ const EmployeeProfileForm = () => {
   const [jobStatuses, setJobStatuses] = useState([]);
   const [levels, setLevels] = useState([]);
 
+
   useEffect(() => {
     async function fetchData() {
       try {
-        const companyData = await getRequest(ServerConfig.url, PAYMBRANCHES);
+        const companyData = await getRequest(ServerConfig.url, PAYMCOMPANIES);
         setCompanies(companyData.data);
 
         const branchData = await getRequest(ServerConfig.url, PAYMBRANCHES);
         setBranches(branchData.data);
+
 
         const employeeData = await getRequest(ServerConfig.url, PAYMEMPLOYEE);
         setEmployees(employeeData.data);
@@ -51,7 +55,7 @@ const EmployeeProfileForm = () => {
         const divisionData = await getRequest(ServerConfig.url, PAYMDIVISION);
         setDivisions(divisionData.data);
 
-        const departmentData = await getRequest(ServerConfig.url, PAYMBRANCHES);
+        const departmentData = await getRequest(ServerConfig.url, PAYMDEPARTMENT);
         setDepartments(departmentData.data);
 
         const designationData = await getRequest(ServerConfig.url, PAYMDESIGNATION);
@@ -66,11 +70,12 @@ const EmployeeProfileForm = () => {
         const categoryData = await getRequest(ServerConfig.url, PAYMCATEGORY);
         setCategories(categoryData.data);
 
-        const jobStatusData = await getRequest(ServerConfig.url, PAYMJOBSTATUS);
-        setJobStatuses(jobStatusData.data);
+        const jobstatusData = await getRequest(ServerConfig.url, PAYMJOBSTATUS);
+        setJobStatuses(jobstatusData.data);
 
         const levelData = await getRequest(ServerConfig.url, PAYMLEVEL);
         setLevels(levelData.data);
+
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -79,11 +84,26 @@ const EmployeeProfileForm = () => {
     fetchData();
   }, []);
 
+
+
+  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setFormData(prevData => ({
+        ...prevData,
+        Emp_Profile_Image: imageUrl
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -92,44 +112,46 @@ const EmployeeProfileForm = () => {
     try {
       const response = await postRequest(ServerConfig.url, SAVE, {
         query: `INSERT INTO [dbo].[paym_employee_profile1]
-                  ([pn_CompanyID]
-                  ,[pn_BranchID]
-                  ,[pn_EmployeeID]
-                  ,[pn_DivisionId]
-                  ,[pn_DepartmentId]
-                  ,[pn_DesingnationId]
-                  ,[pn_GradeId]
-                  ,[pn_ShiftId]
-                  ,[pn_CategoryId]
-                  ,[pn_JobStatusId]
-                  ,[pn_LevelID]
-                  ,[pn_projectsiteID]
-                  ,[d_Date]
-                  ,[v_Reason]
-                  ,[r_Department]
-                  ,[father_name])
+                   ([pn_CompanyID]
+                   ,[pn_BranchID]
+                   ,[pn_EmployeeID]
+                   ,[pn_DivisionId]
+                   ,[pn_DepartmentId]
+                   ,[pn_DesingnationId]
+                   ,[pn_GradeId]
+                   ,[pn_ShiftId]
+                   ,[pn_CategoryId]
+                   ,[pn_JobStatusId]
+                   ,[pn_LevelID]
+                   ,[pn_projectsiteID]
+                   ,[d_Date]
+                   ,[v_Reason]
+                   ,[r_Department]
+                   ,[father_name]
+                   ,[Emp_Profile_Image])
                 VALUES
-                  (${formData.pn_CompanyID}
-                  ,${formData.pn_BranchID}
-                  ,${formData.pn_EmployeeID}
-                  ,${formData.pn_DivisionId}
-                  ,${formData.pn_DepartmentId}
-                  ,${formData.pn_DesingnationId}
-                  ,${formData.pn_GradeId}
-                  ,${formData.pn_ShiftId}
-                  ,${formData.pn_CategoryId}
-                  ,${formData.pn_JobStatusId}
-                  ,${formData.pn_LevelID}
-                  ,${formData.pn_projectsiteID}
-                  ,'${formData.d_Date}'
-                  ,'${formData.v_Reason}'
-                  ,'${formData.r_Department}'
-                  ,'${formData.father_name}')`
+                   ('${formData.pn_CompanyID}'
+                   ,'${formData.pn_BranchID}'
+                   ,'${formData.pn_EmployeeID}'
+                   ,'${formData.pn_DivisionId}'
+                   ,'${formData.pn_DepartmentId}'
+                   ,'${formData.pn_DesingnationId}'
+                   ,'${formData.pn_GradeId}'
+                   ,'${formData.pn_ShiftId}'
+                   ,'${formData.pn_CategoryId}'
+                   ,'${formData.pn_JobStatusId}'
+                   ,'${formData.pn_LevelID}'
+                   ,'${formData.pn_projectsiteID}'
+                   ,'${formData.d_Date}'
+                   ,'${formData.v_Reason}'
+                   ,'${formData.r_Department}'
+                   ,'${formData.father_name}'
+                   ,'${formData.Emp_Profile_Image}')`
       });
 
       if (response.status === 200) {
         alert('Data saved successfully');
-        // Additional logic if needed, e.g., navigate to another page
+        handleReset();
       } else {
         alert('Failed to save data');
       }
@@ -139,15 +161,48 @@ const EmployeeProfileForm = () => {
     }
   };
 
+  const handleReset = () => {
+    setFormData({
+      pn_CompanyID: '',
+      pn_BranchID: '',
+      pn_EmployeeID: '',
+      pn_DivisionId: '',
+      pn_DepartmentId: '',
+      pn_DesingnationId: '',
+      pn_GradeId: '',
+      pn_ShiftId: '',
+      pn_CategoryId: '',
+      pn_JobStatusId: '',
+      pn_LevelID: '',
+      pn_projectsiteID: '',
+      d_Date: '',
+      v_Reason: '',
+      r_Department: '',
+      father_name: '',
+      Emp_Profile_Image: ''
+    });
+  };
+
   return (
+    <Paper
+      elevation={3}
+      style={{
+        padding: 20,
+        margin: "auto",
+        maxWidth: "auto",
+        height: "auto",
+        marginTop: "20px",
+        marginBottom: "20px",
+      }}
+    >
     <Container>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom mt={1} mb={4}>
         Employee Profile Form
       </Typography>
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          {/* Form Fields */}
-          <Grid item xs={12} sm={6}>
+        <Grid container spacing={4}>
+          {/* Company ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="company-select-label">Company ID</InputLabel>
               <Select
@@ -168,7 +223,8 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Branch ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="branch-select-label">Branch ID</InputLabel>
               <Select
@@ -181,15 +237,17 @@ const EmployeeProfileForm = () => {
                 <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
+
                 {branches.map(branch => (
-                  <MenuItem key={branch.pnBranchId} value={branch.pnBranchId}>
-                    {branch.pnBranchId}
-                  </MenuItem>
-                ))}
+                    <MenuItem key={branch.pnBranchId} value={branch.pnBranchId}>
+                      {branch.pnBranchId}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Employee ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="employee-select-label">Employee ID</InputLabel>
               <Select
@@ -210,7 +268,8 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Division ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="division-select-label">Division ID</InputLabel>
               <Select
@@ -231,7 +290,8 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Department ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="department-select-label">Department ID</InputLabel>
               <Select
@@ -252,7 +312,8 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Designation ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="designation-select-label">Designation ID</InputLabel>
               <Select
@@ -267,13 +328,14 @@ const EmployeeProfileForm = () => {
                 </MenuItem>
                 {designations.map(designation => (
                   <MenuItem key={designation.pnDesingnationId} value={designation.pnDesingnationId}>
-                    {designation.pnDesingnationId}
+                    {designation.pnDesignationId}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Grade ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="grade-select-label">Grade ID</InputLabel>
               <Select
@@ -294,7 +356,8 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Shift ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="shift-select-label">Shift ID</InputLabel>
               <Select
@@ -315,7 +378,8 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Category ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="category-select-label">Category ID</InputLabel>
               <Select
@@ -336,11 +400,12 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Job Status ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
-              <InputLabel id="job-status-select-label">Job Status ID</InputLabel>
+              <InputLabel id="jobstatus-select-label">Job Status ID</InputLabel>
               <Select
-                labelId="job-status-select-label"
+                labelId="jobstatus-select-label"
                 name="pn_JobStatusId"
                 value={formData.pn_JobStatusId}
                 onChange={handleChange}
@@ -349,15 +414,16 @@ const EmployeeProfileForm = () => {
                 <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
-                {jobStatuses.map(status => (
-                  <MenuItem key={status.pnJobStatusId} value={status.pnJobStatusId}>
-                    {status.pnJobStatusId}
+                {jobStatuses.map(jobStatus => (
+                  <MenuItem key={jobStatus.pnJobStatusId} value={jobStatus.pnJobStatusId}>
+                    {jobStatus.pnJobStatusId}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Level ID */}
+          <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
               <InputLabel id="level-select-label">Level ID</InputLabel>
               <Select
@@ -372,74 +438,105 @@ const EmployeeProfileForm = () => {
                 </MenuItem>
                 {levels.map(level => (
                   <MenuItem key={level.pnLevelID} value={level.pnLevelID}>
-                    {level.pnLevelID}
+                    {level.pnLevelId}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Project Site */}
+          <Grid item xs={12} sm={4}>
             <TextField
               name="pn_projectsiteID"
               label="Project Site ID"
               value={formData.pn_projectsiteID}
               onChange={handleChange}
               fullWidth
-              required
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* Date */}
+          <Grid item xs={12} sm={4}>
             <TextField
               name="d_Date"
               label="Date"
-              type="date"
+              type="datetime-local"
+              InputLabelProps={{ shrink: true }}
               value={formData.d_Date}
               onChange={handleChange}
               fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              required
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* Reason */}
+          <Grid item xs={12} sm={5}>
             <TextField
               name="v_Reason"
               label="Reason"
               value={formData.v_Reason}
               onChange={handleChange}
               fullWidth
-              required
-              multiline
-              rows={4}
+              InputProps={{
+                style: { height: '100px' } 
+              }}
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* Department */}
+          <Grid item xs={12} sm={4}>
             <TextField
               name="r_Department"
               label="Department"
               value={formData.r_Department}
               onChange={handleChange}
               fullWidth
-              required
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* Father's Name */}
+          <Grid item xs={12} sm={4}>
             <TextField
               name="father_name"
               label="Father's Name"
               value={formData.father_name}
               onChange={handleChange}
               fullWidth
-              required
             />
           </Grid>
+          {/* Profile Image Upload */}
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom>
+            Upload Profile Image
+            </Typography>
+            <input
+              type="file"
+              accept="image/*"
+              id="profile-image-upload"
+              style={{ display: 'none' }}
+              onChange={handleImageUpload}
+            />
+            <label htmlFor="profile-image-upload">
+              <IconButton color="primary" component="span">
+                <CloudUploadIcon style={{ fontSize: 50 }}/>
+              </IconButton>
+            </label>
+            {formData.Emp_Profile_Image && (
+              <img
+                src={formData.Emp_Profile_Image}
+                alt="Profile"
+                style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px' }}
+              />
+            )}
+          </Grid>
+          {/* Submit and Reset Buttons */}
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
+            <Button type="button" variant="contained" color="secondary" onClick={handleReset} style={{ marginLeft: '100px' }}>
+              Reset
+            </Button>
+          </Grid>
         </Grid>
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '20px' }}>
-          Submit
-        </Button>
       </form>
     </Container>
+    </Paper>
   );
 };
 
