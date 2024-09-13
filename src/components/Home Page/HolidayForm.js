@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Grid, Container, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { TextField, Button, Grid, Container, Typography, Select, MenuItem, FormControl, InputLabel, Paper } from '@mui/material';
 import { getRequest, postRequest } from '../../serverconfiguration/requestcomp';
 import { ServerConfig } from '../../serverconfiguration/serverconfig';
 import { PAYMBRANCHES, PAYMCOMPANIES, SAVE } from '../../serverconfiguration/controllers';
+
+
 
 const HolidayForm2 = () => {
   const [formData, setFormData] = useState({
@@ -95,15 +97,26 @@ const HolidayForm2 = () => {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom mt={2} mb={4}>
         Holiday Form
       </Typography>
       <form onSubmit={handleSubmit}>
+      <Paper
+      elevation={3}
+      style={{
+        padding: 20,
+        margin: "100px",
+        maxWidth: "auto",
+        height: "auto",
+        marginTop: "20px",
+        marginBottom: "20px",
+      }}
+    >
         <Grid container spacing={2}>
           {/* Form Fields */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required>
-              <InputLabel id="company-select-label">Company ID</InputLabel>
+              <InputLabel id="company-select-label">Company Name</InputLabel>
               <Select
                 labelId="company-select-label"
                 name="pn_CompanyID"
@@ -116,7 +129,7 @@ const HolidayForm2 = () => {
                 </MenuItem>
                 {companies.map(company => (
                   <MenuItem key={company.pnCompanyId} value={company.pnCompanyId}>
-                    {company.pnCompanyId}
+                    {company.companyName}
                   </MenuItem>
                 ))}
               </Select>
@@ -124,7 +137,7 @@ const HolidayForm2 = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required>
-              <InputLabel id="branch-select-label">Branch ID</InputLabel>
+              <InputLabel id="branch-select-label">Branch Name</InputLabel>
               <Select
                 labelId="branch-select-label"
                 name="pn_BranchID"
@@ -139,7 +152,7 @@ const HolidayForm2 = () => {
                   .filter(branch => branch.pnCompanyId === formData.pn_CompanyID)
                   .map(branch => (
                     <MenuItem key={branch.pnBranchId} value={branch.pnBranchId}>
-                      {branch.pnBranchId}
+                      {branch.branchName}
                     </MenuItem>
                   ))}
               </Select>
@@ -220,15 +233,16 @@ const HolidayForm2 = () => {
 
         <Grid item xs={12} mt={3}>
 
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '20px'}}>
-          Submit
-        </Button>
-
-        <Button onClick={handleReset} variant="contained" color="secondary" style={{ marginTop: '20px', marginLeft: '50px' }}>
+        <Button onClick={handleReset} variant="contained" color="secondary" style={{ marginTop: '20px'}}>
               Reset
             </Button>
 
+            <Button type="submit" variant="contained" color="primary" style={{ marginTop: '20px', marginLeft: '50px' }}>
+          Submit
+        </Button>
+
             </Grid>
+            </Paper>
 
       </form>
     </Container>

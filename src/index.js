@@ -213,14 +213,14 @@ import CompanyMasters from "./components/Masters/CompanyMasters";
 import SpreadGrid1 from "./components/SpreadGrid";
 import MySpreadGrid from "./components/SpreadGrid";
 import EmployeeHome from "./components/Home Page/Employee";
-import HolidaysPage from "./components/Home Page/Holidays";
+
 import HolidayForm2 from "./components/Home Page/HolidayForm";
 import ShiftForm from "./components/Home Page/PaymShiftForm";
 import NewDailyTimeCard1 from "./components/Home Page/NewDailyTimeCard";
 import { Dashboard } from "@mui/icons-material";
 import GraphCheckBox1 from "./components/dashboredsss/GraphCheckBox";
 import DailyTimeCardTable from "./components/Home Page/NewDailyTimeCard";
-import HolidaysHrPage from "./components/Home Page/HolidayHRside";
+
 import LeaveBalances from "./components/Home Page/LeaveBalances";
 import EmployeeReimbursement from "./components/Home Page/Reimbursement";
 import ReimbursementForm from "./components/Home Page/ReimbursementForm";
@@ -229,11 +229,18 @@ import LoanEntryForm from "./components/Home Page/LoanEntryForm";
 import ReimbursementApprovalForm from "./components/Home Page/ReimbursementApprovalForm";
 import Employeeprofile0909090 from "./components/Home Page/Employee";
 import EmployeeProfileForm from "./components/Home Page/EmployeeProfileForm";
+import EmployeeProfilePage from "./components/Home Page/EmployeeProfile";
 
-
+import { LightThemeConfig } from "./components/Home Page/Theme";
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import HolidayEmployeeSide from "./components/Home Page/HolidayEmployeeSide";
+import HolidayHRside from "./components/Home Page/HolidayHRside";
 const store = createStore(entityReducer);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+  <ThemeProvider theme={LightThemeConfig}>
+       <CssBaseline />
   <Provider store={store}>
     <BrowserRouter>
       {/* <br></br>
@@ -268,8 +275,8 @@ root.render(
           <Route path="/SpreadGrid" element={<MySpreadGrid/>}></Route>
 
           <Route path="/Employee" element={<Employeeprofile0909090/>}/>
-          <Route path="/Holidays" element={<HolidaysPage/>}/>
-          <Route path="/HolidayHRside" element={<HolidaysHrPage/>}/>
+         
+          
           <Route path="/HolidayForm" element={<HolidayForm2/>}></Route>
           
           <Route path="/PaymShiftForm" element={<ShiftForm/>}/>
@@ -283,6 +290,10 @@ root.render(
           <Route path="/LoanEntryForm" element={<LoanEntryForm/>}/>
           <Route path="/ReimbursementApprovalForm" element={<ReimbursementApprovalForm/>}/>
           <Route path="/EmployeeProfileForm" element={<EmployeeProfileForm/>}/>
+          <Route path="/EmployeeProfile" element={<EmployeeProfilePage/>}/>
+
+          <Route path="/HolidayEmployeeSide" element={<HolidayEmployeeSide/>}/>
+          <Route path="/HolidayHRside" element={<HolidayHRside/>}/>
 
           {/* <Route path="/layout" element={<Layoutcomp />} />
           <Route path="/att" element={<BasicDateCalendar />} />
@@ -671,6 +682,7 @@ root.render(
       </Routes>
     </BrowserRouter>
   </Provider>
+  </ThemeProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

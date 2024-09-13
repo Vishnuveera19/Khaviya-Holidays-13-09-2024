@@ -188,7 +188,7 @@ const EmployeeProfileForm = () => {
       elevation={3}
       style={{
         padding: 20,
-        margin: "auto",
+        margin: "100px",
         maxWidth: "auto",
         height: "auto",
         marginTop: "20px",
@@ -217,7 +217,7 @@ const EmployeeProfileForm = () => {
                 </MenuItem>
                 {companies.map(company => (
                   <MenuItem key={company.pnCompanyId} value={company.pnCompanyId}>
-                    {company.pnCompanyId}
+                    {company.companyName}
                   </MenuItem>
                 ))}
               </Select>
@@ -312,6 +312,8 @@ const EmployeeProfileForm = () => {
               </Select>
             </FormControl>
           </Grid>
+
+
           {/* Designation ID */}
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
@@ -327,13 +329,16 @@ const EmployeeProfileForm = () => {
                   <em>Select</em>
                 </MenuItem>
                 {designations.map(designation => (
-                  <MenuItem key={designation.pnDesingnationId} value={designation.pnDesingnationId}>
+                  <MenuItem key={designation.pnDesignationId} value={designation.pnDesignationId}>
                     {designation.pnDesignationId}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
+          
+
+
           {/* Grade ID */}
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth required>
@@ -437,7 +442,7 @@ const EmployeeProfileForm = () => {
                   <em>Select</em>
                 </MenuItem>
                 {levels.map(level => (
-                  <MenuItem key={level.pnLevelID} value={level.pnLevelID}>
+                  <MenuItem key={level.pnLevelId} value={level.pnLevelId}>
                     {level.pnLevelId}
                   </MenuItem>
                 ))}

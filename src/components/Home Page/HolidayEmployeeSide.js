@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { format } from 'date-fns'; // Import the format function from date-fns
 import { ServerConfig } from '../../serverconfiguration/serverconfig';
 import { REPORTS } from '../../serverconfiguration/controllers';
 import { postRequest } from '../../serverconfiguration/requestcomp';
@@ -10,7 +11,6 @@ import {
   TableHead, 
   TableRow, 
   TextField, 
-  Button, 
   Typography, 
   Box, 
   Stack,
@@ -20,21 +20,17 @@ import {
   FormControlLabel,
   FormControl
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
-const HolidaysPage = () => {
+const HolidayEmployeeSide = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [holidayType, setHolidayType] = useState('all');
   const [holidays, setHolidays] = useState([]);
-  const navigate = useNavigate();
 
   // Function to fetch holidays data
   const fetchHolidays = async () => {
     try {
-      const query = `
-        SELECT From_date AS date, days AS day, pn_Holidayname AS holidayName
-        FROM paym_holiday;
-      `;
+      const query = 
+        `SELECT From_date AS date, days AS day, pn_Holidayname AS holidayName FROM paym_holiday WHERE Fyear = YEAR(GETDATE());`;
 
       const response = await postRequest(ServerConfig.url, REPORTS, { query });
 
@@ -55,7 +51,8 @@ const HolidaysPage = () => {
 
   // Filter holidays based on search term and type
   const filteredHolidays = holidays.filter(holiday => {
-    const isUpcoming = new Date(holiday.date) > new Date();
+    const holidayDate = new Date(holiday.date);
+    const isUpcoming = holidayDate > new Date();
     if (holidayType === 'upcoming' && !isUpcoming) return false;
     if (holidayType === 'past' && isUpcoming) return false;
 
@@ -64,19 +61,19 @@ const HolidaysPage = () => {
            holiday.holidayName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const handleAddNewHolidayClick = () => {
-    navigate('/HolidayForm');
+  // Function to format date
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return format(date, 'dd-MM-yyyy'); // Format the date as 'dd-MM-yyyy'
   };
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold',  textAlign: 'left' }}>
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
         Holidays
       </Typography>
-      <Typography variant="body10" gutterBottom>
-        All Holiday Lists
-      </Typography>
-      <Stack direction="row" spacing={2} alignItems="center" mb={2} sx={{ justifyContent: "space-between" }}>
+      
+      <Stack direction="row" spacing={4} alignItems="center" mb={2} sx={{ justifyContent: "space-between" }}>
         <TextField
           placeholder="Search..."
           value={searchTerm}
@@ -95,33 +92,32 @@ const HolidaysPage = () => {
             <FormControlLabel value="past" control={<Radio />} label="Past Holidays" />
           </RadioGroup>
         </FormControl>
-
-        <Button variant="contained" color="primary" onClick={handleAddNewHolidayClick}>
-          Add New Holiday
-        </Button>
       </Stack>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }}>
-          <TableHead sx={{ backgroundColor: "lightgrey" }}>
-            <TableRow>
-              <TableCell sx={{ fontSize: 15, fontWeight: 'bold' }}>Date</TableCell>
-              <TableCell sx={{ fontSize: 15, fontWeight: 'bold' }}>Days</TableCell>
-              <TableCell sx={{ fontSize: 15, fontWeight: 'bold' }}>Holiday Name</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredHolidays.map((holiday) => (
-              <TableRow key={holiday.date}>
-                <TableCell>{holiday.date}</TableCell>
-                <TableCell>{holiday.day}</TableCell>
-                <TableCell>{holiday.holidayName}</TableCell>
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
+        <TableContainer component={Paper} sx={{ width: 1000 }}>
+          <Table>
+            <TableHead sx={{ backgroundColor: "lightgrey" }}>
+              <TableRow>
+                <TableCell sx={{ fontSize: 18, fontWeight: 'bold' }}>Date</TableCell>
+                <TableCell sx={{ fontSize: 18, fontWeight: 'bold' }}>Days</TableCell>
+                <TableCell sx={{ fontSize: 18, fontWeight: 'bold' }}>Holiday Name</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {filteredHolidays.map((holiday) => (
+                <TableRow key={holiday.date}>
+                  <TableCell sx={{ fontSize: 15 }}>{formatDate(holiday.date)}</TableCell>
+                  <TableCell sx={{ fontSize: 15 }}>{holiday.day}</TableCell>
+                  <TableCell sx={{ fontSize: 15 }}>{holiday.holidayName}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </Box>
   );
 };
 
-export default HolidaysPage;
+export default HolidayEmployeeSide;
